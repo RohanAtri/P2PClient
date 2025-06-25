@@ -2,7 +2,7 @@ import { encryptByKeyV2 } from "@/lib/utils/crypto";
 import React, { useEffect, useState } from "react";
 
 type MobileVerificationProps = {
-  onVerified: () => void;
+    onVerified: () => void;
 };
 
 const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
@@ -110,6 +110,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
             const data = await response.json();
             if (data.status == 200) {
                 setShowOtpScreen(true);
+                setTimer(60);
             } else {
                 console.error('API Error:', 'Not able to fetch primary questions');
             }
@@ -171,6 +172,20 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
         }
     };
 
+    const isFormValid =
+        fullName.trim().length > 0 &&
+        mobileNumber.length === 10 &&
+        acceptedTerms;
+
+    const handleMobileChange = (value: string) => {
+        if (/^\d{0,10}$/.test(value)) {
+            setMobileNumber(value);
+        }
+    };
+
+    const isOtpBtnEnable = () => {
+        return otp.every((digit) => digit.trim() !== "") && otp.length === 6;
+    };
 
     return (
         <>
@@ -211,7 +226,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                                     <input
                                         type="tel"
                                         value={mobileNumber}
-                                        onChange={(e) => setMobileNumber(e.target.value)}
+                                        onChange={(e) => handleMobileChange(e.target.value)}
                                         placeholder="Enter your mobile number"
                                         className="flex-1 outline-none border-none placeholder-[#A3A3A3] text-[#171717] bg-transparent"
                                     />
@@ -222,6 +237,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                                 <input
                                     type="checkbox"
                                     id="terms"
+                                    checked={acceptedTerms}
                                     onChange={(e) => setAcceptedTerms(e.target.checked)}
                                     className="w-4 h-4  text-white bg-black border-none rounded checked:bg-black checked:border-none"
                                 />
@@ -236,8 +252,8 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                             <div className="mt-5 flex justify-center items-center">
                                 <button
                                     type="submit"
-                                    disabled={!acceptedTerms}
-                                    className={`px-6 py-2 rounded-[2px] transition duration-300 ease-in-out text-white ${acceptedTerms
+                                    disabled={!isFormValid}
+                                    className={`px-6 py-2 rounded-[2px] transition duration-300 ease-in-out text-white ${isFormValid
                                         ? "bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer"
                                         : "bg-[#A3A3A3] cursor-not-allowed"
                                         }`}
@@ -256,7 +272,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                         </h2>
 
                         <p className="text-[16px] leading-[25px] font-normal text-center text-[#0A0A0A] mb-2">
-                            Enter the 6-digit verification code sent to your phone number +91 9XXXX X2113
+                            Enter the 6-digit verification code sent to your phone number +91 {mobileNumber[0]}XXXX X{mobileNumber.slice(-4)}
                         </p>
 
                         <p className="text-[16px] leading-[25px] text-center text-[#0A0A0A] mb-5">
@@ -292,8 +308,11 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                         <div className="mt-5 flex justify-center items-center mb-4">
                             <button
                                 onClick={validateOtp}
-                                type="button"
-                                className="px-6 py-2 bg-[#737373] text-white rounded-[2px] hover:bg-[#5e5e5e] transition duration-300 ease-in-out"
+                                type="button" disabled={!isOtpBtnEnable()}
+                                className={`px-6 py-2 rounded-[2px] transition duration-300 ease-in-out text-white ${isOtpBtnEnable()
+                                    ? "bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer"
+                                    : "bg-[#A3A3A3] cursor-not-allowed"
+                                    }`}
                             >
                                 Verify OTP
                             </button>
@@ -302,7 +321,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                         <p className="text-[16px] leading-[25px] text-center text-[#0A0A0A]">
                             Didn't receive OTP?
                             {timer > 0 ? (
-                                <span className="text-[#4C8BF5] ml-1" onClick={(e) => {
+                                <span className="text-[#4C8BF5] ml-1 cursor-pointer" onClick={(e) => {
                                     e.preventDefault();
                                     sendOTP();
                                     setTimer(60); // restart timer
