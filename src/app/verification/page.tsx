@@ -7,7 +7,7 @@ import ReviewVerification from "@/components/ReviewVerification";
 import { useEffect, useState } from "react";
 
 export default function Verification() {
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(1);
 
     const stepLabels = [
         "Mobile verification",
@@ -80,21 +80,21 @@ export default function Verification() {
             }
         };
 
-        fetchStatus();
+        //fetchStatus();
     }, []);
 
     return (
-        <div className="w-[100vw] h-[calc(100vh-85px)] bg-[#F8F7F4] flex">
-            <div className="h-full w-[40%] flex justify-end items-center">
-                <div className="w-[60%] h-[70%]">
+        <div className="w-full h-[calc(100vh-65px)] md:h-[calc(100vh-85px)] flex flex-col md:flex-row items-center justify-center bg-[#F8F7F4] px-4 py-8 sm:px-6 sm:py-10">
+            <div className="md:h-full w-full md:w-[40%] flex md:justify-end items-center">
+                <div className="md:w-[60%] w-full md:h-[70%]">
                     <div className="w-full h-full md:py-10 py-4 px-2 bg-[#957E61]">
-                        <ol className="relative md:pl-6 flex flex-col justify-around h-full">
+                        <ol className="relative md:pl-6 flex md:flex-col justify-between h-full">
                             {stepLabels.map((label, idx) => {
                                 const circleNum = idx + 1;
                                 return (
                                     <li
                                         key={idx}
-                                        className="relative flex flex-row items-center w-full"
+                                        className="relative flex flex-col md:flex-row items-center w-full mb-4 md:mb-0"
                                     >
                                         <div
                                             className={`z-10 flex items-center justify-center w-8 h-8 rounded-full ring-3 font-semibold text-[#000000] ${getCircleStyle(
@@ -112,14 +112,6 @@ export default function Verification() {
                                             ></div>
                                         )}
 
-                                        {idx !== stepLabels.length - 1 && (
-                                            <div
-                                                className={`absolute block md:hidden top-[16px] left-8 right-0 border-t-2 ${getLineStyle(
-                                                    idx
-                                                )}`}
-                                            ></div>
-                                        )}
-
                                         <span className="md:ml-4 mt-2 md:mt-0 text-white font-medium text-xs md:text-sm text-center md:text-left">
                                             {label}
                                         </span>
@@ -130,7 +122,7 @@ export default function Verification() {
                     </div>
                 </div>
             </div>
-            <div className="h-full w-[60%]">
+            <div className="w-full md:w-[60%] h-full px-4 py-6 md:p-10 overflow-auto">
                 {step === 1 && <MobileVerification onVerified={() => setStep(2)} />}
                 {step === 2 && <PanVerification onVerified={() => setStep(3)} />}
                 {step === 3 && <BankVerification />}

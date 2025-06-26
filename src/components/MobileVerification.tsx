@@ -238,11 +238,11 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
 
     return (
         <>
-            <div className="w-[70%] h-full flex justify-start items-center px-20">
+            <div className="w-full xl:w-[70%] h-full flex justify-start items-center px-4">
                 {!showOtpScreen ? (
-                    <div className="w-full h-full flex flex-col justify-center">
-                        <form onSubmit={handleSubmit}>
-                            <h2 className="text-2xl font-semibold text-center mb-6 text-[#171717]">
+                    <div className="w-full h-full flex flex-col md:justify-center items-center">
+                        <form onSubmit={handleSubmit} className="max-w-[520px]">
+                            <h2 className="sm:text-2xl font-semibold text-center mb-6 text-[#171717]">
                                 Enter your Name and Mobile Number
                             </h2>
 
