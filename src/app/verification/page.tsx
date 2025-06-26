@@ -7,7 +7,7 @@ import ReviewVerification from "@/components/ReviewVerification";
 import { useEffect, useState } from "react";
 
 export default function Verification() {
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
 
     const stepLabels = [
         "Mobile verification",
@@ -80,7 +80,7 @@ export default function Verification() {
             }
         };
 
-        //fetchStatus();
+        fetchStatus();
     }, []);
 
     return (

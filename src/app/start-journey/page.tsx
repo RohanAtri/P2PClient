@@ -11,6 +11,8 @@ export default function StartJourney() {
     const [loanAmount, setLoanAmount] = useState(0);
     const [tenure, setTenure] = useState(0);
 
+    const [selectPurpose, setPurpose] = useState("");
+
     const [minLoan, setMinLoan] = useState(0);
     const [maxLoan, setMaxLoan] = useState(0);
     const [stepLoan, setStepLoan] = useState(10000);
@@ -85,14 +87,27 @@ export default function StartJourney() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const borrowerData = {
-            loanAmount,
-            tenure,
-            loanPurpose: (document.querySelector("select[name='loanPurpose']") as HTMLSelectElement)?.value,
-        };
+        const selectedPurposeAnswer = primaryQuestions[2]?.answers?.find(
+            (ans: any) => ans.value === Number(selectPurpose)
+        );
 
-        localStorage.setItem("borrowerData", JSON.stringify(borrowerData));
+        const questions = [
+            {
+                question_id: primaryQuestions[0]?.q_id,
+                answer: loanAmount,
+            },
+            {
+                question_id: primaryQuestions[1]?.q_id,
+                answer: tenure,
+            },
+            {
+                question_id: primaryQuestions[2]?.q_id,
+                answer_id: Number(selectPurpose),
+                answer: selectedPurposeAnswer?.key || "",
+            },
+        ];
 
+        localStorage.setItem("questions", JSON.stringify(questions));
         router.push("/verification");
     };
 
@@ -193,6 +208,8 @@ export default function StartJourney() {
                             <select
                                 name="loanPurpose"
                                 required
+                                value={selectPurpose}
+                                onChange={(e) => setPurpose(e.target.value)}
                                 className="w-full bg-white rounded-none outline-none border border-[#A3A3A3] text-[#A3A3A3] p-3"
                             >
                                 <option value="">Select Purpose</option>
@@ -207,7 +224,11 @@ export default function StartJourney() {
                         <div className="mb-5 flex justify-center items-center">
                             <button
                                 type="submit"
-                                className="px-6 py-2 bg-[#737373] text-white rounded-[2px] hover:bg-[#5e5e5e] transition duration-300 ease-in-out"
+                                disabled={!selectPurpose}
+                                className={`px-6 py-2 text-white rounded-[2px] transition duration-300 ease-in-out ${selectPurpose
+                                    ? 'bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer'
+                                    : 'bg-[#A3A3A3] cursor-not-allowed'
+                                    }`}
                             >
                                 Submit
                             </button>

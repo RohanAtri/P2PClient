@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 type PANVerificationProps = {
-  onVerified: () => void;
+    onVerified: () => void;
 };
 
 const PanVerification = ({ onVerified }: PANVerificationProps) => {
@@ -10,6 +10,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
 
     const genderOptions = ['Male', 'Female', 'Other'];
     const empOptions = ['Salaried', 'Self Employed'];
+    const panRegex = /^[A-Z]{3}[PH][A-Z][0-9]{4}[A-Z]$/;
 
     const [pan, setPan] = useState("");
     const [dob, setDob] = useState("");
@@ -20,6 +21,15 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
         if (!dateStr) return "";
         const [yyyy, mm, dd] = dateStr.split("-");
         return `${dd}/${mm}/${yyyy}`;
+    };
+
+    const isFormValid = () => {
+        return (
+            name.trim() !== "" &&
+            dob.trim() !== "" &&
+            panRegex.test(pan) &&
+            consents.length == 2
+        );
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -76,7 +86,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
 
                             <div className="mb-4">
                                 <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
-                                    Name
+                                    Name <span className="text-red-500">*</span>
                                 </label>
 
                                 <input
@@ -97,9 +107,14 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                     type="text"
                                     placeholder="Enter your PAN"
                                     value={pan}
-                                    onChange={(e) => setPan(e.target.value)}
-                                    className="w-full border border-[#A3A3A3] outline-none placeholder-[#A3A3A3] px-3 py-2 rounded-[2px] bg-white"
+                                    onChange={(e) => setPan(e.target.value.toUpperCase())}
+                                    maxLength={10}
+                                    className={`w-full border outline-none px-3 py-2 rounded-[2px] bg-white ${pan && !panRegex.test(pan) ? "border-red-500" : "border-[#A3A3A3]"
+                                        }`}
                                 />
+                                {pan && !panRegex.test(pan) && (
+                                    <p className="text-red-500 text-sm mt-1">Invalid PAN format</p>
+                                )}
                             </div>
 
                             <div className="mb-4">
@@ -207,7 +222,11 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                             <div className="flex justify-center items-center">
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 bg-[#737373] text-white rounded-[2px] hover:bg-[#5e5e5e] transition duration-300 ease-in-out"
+                                    disabled={!isFormValid()}
+                                    className={`px-6 py-2 text-white rounded-[2px] transition duration-300 ease-in-out ${isFormValid()
+                                            ? "bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer"
+                                            : "bg-[#A3A3A3] cursor-not-allowed"
+                                        }`}
                                 >
                                     Continue
                                 </button>

@@ -105,7 +105,7 @@ const BankVerification = () => {
                         <select className="w-full border border=[#171717] p-3 outline-none rounded-[2px]"
                             value={selectedBankCode}
                             onChange={(e) => setSelectedBankCode(e.target.value)}>
-                            <option selected>Choose a Bank</option>
+                            <option value="">Choose a Bank</option>
                             {bankList.map((bank: any) => (
                                 <option key={bank.name} value={bank.id}>
                                     {bank.name}
@@ -126,7 +126,11 @@ const BankVerification = () => {
                         <button
                             type="button"
                             onClick={handleContinue}
-                            className="px-6 py-2 bg-[#737373] text-white rounded-[2px] hover:bg-[#5e5e5e] transition duration-300 ease-in-out"
+                            disabled={!selectedBankCode}
+                            className={`px-6 py-2 text-white rounded-[2px] transition duration-300 ease-in-out ${selectedBankCode
+                                    ? 'bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer'
+                                    : 'bg-[#A3A3A3] cursor-not-allowed'
+                                }`}
                         >
                             Continue
                         </button>

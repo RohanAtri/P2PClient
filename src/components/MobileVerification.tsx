@@ -71,8 +71,6 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Submitted Name:", fullName);
-        console.log("Submitted Mobile:", mobileNumber);
         const payload = {
             mobile_number: mobileNumber,
             name: fullName,
@@ -106,7 +104,6 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                 },
                 body: JSON.stringify(bodyToSend),
             });
-
             const data = await response.json();
             if (data.status == 200) {
                 setShowOtpScreen(true);
@@ -158,17 +155,55 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                 },
                 body: JSON.stringify(body),
             });
-
             const data = await response.json();
             if (data.status === 200) {
                 localStorage.setItem("access_token", data.data.tokens.access_token)
+                if (!data.data.old_user) {
+                    loanInfoSubmit();
+                }
                 onVerified();
+
             } else {
                 alert(data.message || "OTP verification failed.");
             }
         } catch (error) {
             console.error("OTP verification error:", error);
             alert("Something went wrong!");
+        }
+    };
+
+    const loanInfoSubmit = async () => {
+        const questionsData = JSON.parse(localStorage.getItem('questions') || '[]');
+
+        const body = {
+            questions: questionsData
+        };
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+            alert("Access token missing");
+            return;
+        }
+
+        const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers/primary-screening-questions/save`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`, // ⬅️ Set token here
+                },
+                body: JSON.stringify(body),
+            });
+
+            const data = await response.json();
+            if (data.status === 200) {
+            } else {
+                //alert(data.message || "PAN verification failed.");
+            }
+        } catch (error) {
+            console.error("Save Question API Error:", error);
+            //alert("Something went wrong.");
         }
     };
 
@@ -185,6 +220,20 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
 
     const isOtpBtnEnable = () => {
         return otp.every((digit) => digit.trim() !== "") && otp.length === 6;
+    };
+
+    const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData("text").trim();
+
+        if (/^\d{6}$/.test(pastedData)) {
+            const newOtp = pastedData.split("");
+            setOtp(newOtp);
+
+            // Focus the last input
+            const lastInput = document.getElementById(`otp-5`);
+            lastInput?.focus();
+        }
     };
 
     return (
@@ -292,6 +341,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                                     value={digit}
                                     onChange={(e) => handleOtpChange(e, idx)}
                                     onKeyDown={(e) => handleKeyDown(e, idx)}
+                                    onPaste={(e) => handleOtpPaste(e)}
                                     id={`otp-${idx}`}
                                     className="text-center text-[#DEDDD9] border border-gray-300 text-3xl font-bold rounded-[2px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     style={{
