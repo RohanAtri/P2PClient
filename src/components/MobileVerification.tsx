@@ -238,7 +238,8 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
 
     return (
         <>
-            <div className="w-full xl:w-[70%] h-full flex justify-start items-center px-4">
+            <div className={`w-full xl:w-[70%] h-full flex items-center px-4 ${showOtpScreen ? 'justify-center' : ''
+                }`}>
                 {!showOtpScreen ? (
                     <div className="w-full h-full flex flex-col md:justify-center items-center">
                         <form onSubmit={handleSubmit} className="max-w-[520px]">
@@ -315,7 +316,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
 
                     </div>
                 ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center px-18">
+                    <div className="w-full h-full flex flex-col items-center justify-center max-w-[450px] px-5 md:px-12">
                         <h2 className="text-2xl font-bold text-gray-900 text-center mb-4 font-sans">
                             OTP Verification
                         </h2>
