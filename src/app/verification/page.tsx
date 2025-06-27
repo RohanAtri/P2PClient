@@ -7,7 +7,7 @@ import ReviewVerification from "@/components/ReviewVerification";
 import { useEffect, useState } from "react";
 
 export default function Verification() {
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(4);
 
     const stepLabels = [
         "Mobile verification",
@@ -122,7 +122,7 @@ export default function Verification() {
                     </div>
                 </div>
             </div>
-            <div className="w-full md:w-[60%] h-full px-4 py-6 md:p-10 overflow-auto">
+            <div className="w-full md:w-[60%] h-full px-4 py-6 md:p-10">
                 {step === 1 && <MobileVerification onVerified={() => setStep(2)} />}
                 {step === 2 && <PanVerification onVerified={() => setStep(3)} />}
                 {step === 3 && <BankVerification />}

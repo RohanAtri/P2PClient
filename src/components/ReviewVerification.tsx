@@ -26,9 +26,9 @@ const [reviewData, setReviewData] = useState<any>({});
 
     return (
         <>
-            <div className="w-[70%] h-full flex justify-start items-center px-20">
+            <div className="xl:w-[70%] w-full h-full flex justify-start items-center px-10">
                 <div className="w-full h-full flex flex-col justify-center">
-                    <h2 className="text-2xl font-semibold text-center mb-5 text-[#171717]">
+                    <h2 className="sm:text-3xl text-2xl font-semibold text-center mb-5 text-[#171717]">
                         Your Application is Under Review
                     </h2>
                     
@@ -40,7 +40,7 @@ const [reviewData, setReviewData] = useState<any>({});
                         Expected processing time: <span className="font-semibold">{reviewData.processing_time}.</span>
                     </p>
 
-                    <div className="w-full bg-white px-20 py-4 shadow-sm rounded-[2px] text-[20px] mb-5">
+                    <div className="w-full bg-white md:px-20 px-10 py-4 shadow-sm rounded-[2px] text-[20px] mb-5">
                         <div className="flex justify-between items-center mb-3">
                             <h3>Amount applied</h3>
                             <p className="font-semibold">{reviewData.amount}</p>

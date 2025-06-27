@@ -243,7 +243,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                 {!showOtpScreen ? (
                     <div className="w-full h-full flex flex-col md:justify-center items-center">
                         <form onSubmit={handleSubmit} className="max-w-[520px]">
-                            <h2 className="sm:text-2xl font-semibold text-center mb-6 text-[#171717]">
+                            <h2 className="sm:text-3xl text-2xl font-semibold text-center mb-6 text-[#171717]">
                                 Enter your Name and Mobile Number
                             </h2>
 
@@ -317,7 +317,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
                     </div>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center max-w-[450px] px-5 md:px-12">
-                        <h2 className="text-2xl font-bold text-gray-900 text-center mb-4 font-sans">
+                        <h2 className="sm:text-3xl text-2xl font-bold text-gray-900 text-center mb-4 font-sans">
                             OTP Verification
                         </h2>
 
