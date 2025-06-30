@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { encryptByKeyV2 } from '@/lib/utils/crypto';
 import { removeComma } from "@/lib/utils/format";
 import Image from "next/image";
+import toast from 'react-hot-toast';
 
 export default function StartJourney() {
     const [loading, setLoading] = useState(false);
@@ -33,7 +34,7 @@ export default function StartJourney() {
             const encryptedClientId = await encryptByKeyV2(clientId, encryptionKey);
             const encryptedClientSecret = await encryptByKeyV2(clientSecret, encryptionKey);
 
-            const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers-auth/primary-screening-questions`;
+            const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers-auth/primary-screening-question`;
 
             try {
                 const response = await fetch(apiUrl, {
@@ -53,10 +54,10 @@ export default function StartJourney() {
                     setLoanAmountFunction(questions);
                     setTenureFunction(questions);
                 } else {
-                    console.error('API Error:', 'Not able to fetch primary questions');
+                    toast.error('Not able fetch primary questions');
                 }
-            } catch (error) {
-                console.error('API Error:', error);
+            } catch (error:any) {
+                toast.error(error);
             } finally {
                 setLoading(false);
             }

@@ -29,17 +29,6 @@ body {
 }
 
 /* Custom range thumb styling */
-.custom-range::-webkit-slider-thumb {
-  appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 9999px;
-  background-color: black;
-  cursor: pointer;
-  margin-top: -7px;
-  /* Align with track */
-  border: none;
-}
 
 .custom-range {
   appearance: none;
@@ -66,6 +55,13 @@ body {
   border-radius: 50%;
   cursor: pointer;
 }
+
+.custom-range::-moz-range-progress {
+  background-color: black;
+  height: 8px;
+  border-radius: 4px;
+}
+
 button {
   cursor: pointer;
 }

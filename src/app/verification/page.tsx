@@ -5,9 +5,12 @@ import MobileVerification from "@/components/MobileVerification";
 import PanVerification from "@/components/PanVerification";
 import ReviewVerification from "@/components/ReviewVerification";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from 'react-hot-toast';
 
 export default function Verification() {
-    const [step, setStep] = useState(4);
+    const [step, setStep] = useState(0);
+    const router = useRouter();
 
     const stepLabels = [
         "Mobile verification",
@@ -63,15 +66,20 @@ export default function Verification() {
 
                 const data = await response.json();
                 if (data.status === 200) {
-                    const currentStage: number = Number(data.data.current_stage);
-                    if (currentStage === 0) {
-                        setStep(1);
+                    if (data.data.is_onboarded) {
+                        router.push("/dashboard");
                     } else {
-                        const step = stageIdToStep[currentStage] || 1;
-                        setStep(step);
+                        const currentStage: number = Number(data.data.current_stage);
+                        if (currentStage === 0) {
+                            setStep(1);
+                        } else {
+                            const step = stageIdToStep[currentStage] || 1;
+                            setStep(step);
+                        }
                     }
+
                 } else {
-                    console.error("Failed to fetch banks:", data.message);
+                    toast.error('Failed to ')
                     setStep(1);
                 }
             } catch (error) {
@@ -80,7 +88,7 @@ export default function Verification() {
             }
         };
 
-        //fetchStatus();
+        fetchStatus();
     }, []);
 
     return (
@@ -122,7 +130,7 @@ export default function Verification() {
                     </div>
                 </div>
             </div>
-            <div className="w-full md:w-[60%] h-full px-4 py-6 md:p-10">
+            <div className="w-full md:w-[60%] h-full px-4 py-6 md:p-10 overflow-y-auto">
                 {step === 1 && <MobileVerification onVerified={() => setStep(2)} />}
                 {step === 2 && <PanVerification onVerified={() => setStep(3)} />}
                 {step === 3 && <BankVerification />}

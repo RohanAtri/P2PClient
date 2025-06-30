@@ -79,17 +79,17 @@ const BankVerification = () => {
 
     return (
         <>
-            <div className="w-[70%] h-full flex justify-start items-center px-20">
+            <div className="xl:w-[80%] w-full xl:h-full flex justify-start items-center px-0 sm:px-10">
                 <div className="w-full h-full flex flex-col justify-center">
-                    <h2 className="text-2xl font-semibold text-center mb-4 text-[#171717]">
+                    <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-4 text-[#171717]">
                         Add your Primary Bank Account
                     </h2>
 
-                    <p className="text-[16px] leading-[25px] font-normal text-center text-[#0A0A0A] mb-2">
+                    <p className="text-base sm:text-lg leading-6 text-center text-[#0A0A0A] mb-4">
                         Please provide details of your bank account in which Salary/Income gets credited to get higher loan offers
                     </p>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-2 py-2 bg-[#f9f8f4] mb-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6 px-2 py-2 bg-[#f9f8f4] mb-4">
                         {banks.map((bank) => (
                             <div
                                 key={bank.name}

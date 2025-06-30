@@ -31,7 +31,6 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
             consents.length == 2
         );
     };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const body = {
@@ -76,7 +75,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
 
     return (
         <>
-            <div className="w-[80%] h-full flex justify-start items-center px-22">
+            <div className="xl:w-[80%] w-full xl:h-full flex lg:justify-start justify-center items-center xl:px-22 px-10">
                 {true ? (
                     <form onSubmit={handleSubmit}>
                         <div className="w-full h-full flex flex-col justify-center">
@@ -84,7 +83,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                 Enter your PAN Number and Date of Birth
                             </h2>
 
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
                                     Name <span className="text-red-500">*</span>
                                 </label>
@@ -98,7 +97,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                 />
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
                                     PAN <span className="text-red-500">*</span>
                                 </label>
@@ -113,11 +112,11 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                         }`}
                                 />
                                 {pan && !panRegex.test(pan) && (
-                                    <p className="text-red-500 text-sm mt-1">Invalid PAN format</p>
+                                    <p className="text-red-500 text-sm">Invalid PAN format</p>
                                 )}
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
                                     Date of Birth <span className="text-red-500">*</span>
                                 </label>
@@ -130,7 +129,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                 />
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
                                     Gender <span className="text-red-500">*</span>
                                 </label>
@@ -157,7 +156,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                 </div>
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
                                     Employment Type <span className="text-red-500">*</span>
                                 </label>
