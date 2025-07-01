@@ -86,10 +86,10 @@ export default function Verification() {
         if (token) {
             fetchStatus()
         } else {
-            if(localStorage.getItem('access_token')) {
+            if(localStorage.getItem('questions')) {
                 setStep(1);
             } else {
-                router.push("/questions");
+                router.push("/start-journey");
             }
         }
     }, []);
