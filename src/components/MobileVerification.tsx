@@ -119,6 +119,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
             const data = await validateOtptoUser(body)
             if (data.status == 200) {
                 localStorage.setItem("access_token", data.data.tokens.access_token)
+                document.cookie = `access_token=${data.data.tokens.access_token}; path=/; max-age=86400`;
                 localStorage.setItem("user_code",data.data.user_code)
                 if (!data.data.old_user) {
                     loanInfoSubmit();

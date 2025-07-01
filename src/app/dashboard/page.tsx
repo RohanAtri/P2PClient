@@ -16,7 +16,7 @@ export default function Dashboard() {
   };
   
   return (
-    <ProtectedRoute>
+    // <ProtectedRoute> </ProtectedRoute>
       <div className="w-full h-[calc(100vh-65px)] md:h-[calc(100vh-85px)] flex bg-[#F8F7F4] text-[#000]">
       {/* Sidebar */}
       <aside className="w-[250px] bg-white shadow-md p-6 flex flex-col">
@@ -100,7 +100,7 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
-    </ProtectedRoute>
+   
     
   )
 }
