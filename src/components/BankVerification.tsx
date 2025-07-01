@@ -1,4 +1,6 @@
+import { getBankList, saveBank } from "@/services/auth-verificationService";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const BankVerification = () => {
 
@@ -17,22 +19,16 @@ const BankVerification = () => {
     useEffect(() => {
         const fetchBanks = async () => {
             try {
-                const accessToken = localStorage.getItem("access_token");
-                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}customers/bank-list`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
 
-                const data = await response.json();
+                const data = await getBankList();
                 if (data.status === 200) {
                     setBanks(data.data.bank_list);
                 } else {
-                    console.error("Failed to fetch banks:", data.message);
+                    toast.error(data.message || "Failed to get Bank list");
                 }
-            } catch (error) {
-                console.error("Error fetching banks:", error);
+            } catch (error:any) {
+                const message = error.response?.data?.message || error.message || 'Failed to get Bank list';
+                toast.error(message)
             }
         };
 
@@ -41,37 +37,23 @@ const BankVerification = () => {
 
     const handleContinue = async () => {
         if (!selectedBankCode) {
-            alert("Please select a bank");
+            toast.error("Please select a bank");
             return;
         }
 
-        const accessToken = localStorage.getItem("access_token");
-        const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers/bank-statement?bank_code=${selectedBankCode}`;
-
         try {
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const data = await response.json();
+            const data = await saveBank(selectedBankCode);
             if (data.status === 200) {
                 const redirectUrl = data.data.url;
-
                 if (redirectUrl) {
-                    window.location.href = redirectUrl; // ✅ Full redirect outside your app
-                    // OR router.push(redirectUrl); // ✅ use this if the URL is within your Next.js routes
+                    window.location.href = redirectUrl;
                 }
-
             } else {
-                alert(data.message || "Bank verification failed.");
+                toast.error(data.message || "Failed to save Bank");
             }
-        } catch (error) {
-            console.error("Bank verification error:", error);
-            alert("Something went wrong.");
+        } catch (error: any) {
+            const message = error.response?.data?.message || error.message || 'Failed to save Bank';
+            toast.error(message)
         }
     };
 
@@ -128,8 +110,8 @@ const BankVerification = () => {
                             onClick={handleContinue}
                             disabled={!selectedBankCode}
                             className={`px-6 py-2 text-white rounded-[2px] transition duration-300 ease-in-out ${selectedBankCode
-                                    ? 'bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer'
-                                    : 'bg-[#A3A3A3] cursor-not-allowed'
+                                ? 'bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer'
+                                : 'bg-[#A3A3A3] cursor-not-allowed'
                                 }`}
                         >
                             Continue

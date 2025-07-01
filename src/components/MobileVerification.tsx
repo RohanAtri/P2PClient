@@ -1,5 +1,6 @@
-import { encryptByKeyV2 } from "@/lib/utils/crypto";
+import { savePrimaryQuestion, sendOtptoUser, validateOtptoUser } from "@/services/auth-verificationService";
 import React, { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 
 type MobileVerificationProps = {
     onVerified: () => void;
@@ -83,36 +84,17 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
 
     const sendOTP = async (bodyParam?: typeof requestBody) => {
         const bodyToSend = bodyParam || requestBody;
-        const clientId = `${process.env.NEXT_PUBLIC_CLIENT_ID}`;
-        const clientSecret = `${process.env.NEXT_PUBLIC_CLIENT_SECRET}`;
-        const authCode = `${process.env.NEXT_PUBLIC_AUTH_CODE}`;
-
-        const encryptionKey = `${process.env.NEXT_PUBLIC_ENCRYPION_KEY}`; // Must be 32 characters (256 bits)
-
-        const encryptedClientId = await encryptByKeyV2(clientId, encryptionKey);
-        const encryptedClientSecret = await encryptByKeyV2(clientSecret, encryptionKey);
-
-        const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers-auth/sent-otp`;
         try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'clientid': encryptedClientId,
-                    'clientsecret': encryptedClientSecret,
-                    'authcode': authCode
-                },
-                body: JSON.stringify(bodyToSend),
-            });
-            const data = await response.json();
+            const data = await sendOtptoUser(bodyToSend)
             if (data.status == 200) {
                 setShowOtpScreen(true);
                 setTimer(60);
             } else {
-                console.error('API Error:', 'Not able to fetch primary questions');
+                toast.error('Not able to send OTP');
             }
-        } catch (error) {
-            console.error('API Error:', error);
+        } catch (error: any) {
+            const message = error.response?.data?.message || error.message || 'Not able to send OTP'
+            toast.error(message)
         } finally {
             // setLoading(false);
         }
@@ -133,44 +115,24 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
             user_type: 2,
         };
 
-        const clientId = `${process.env.NEXT_PUBLIC_CLIENT_ID}`;
-        const clientSecret = `${process.env.NEXT_PUBLIC_CLIENT_SECRET}`;
-        const authCode = `${process.env.NEXT_PUBLIC_AUTH_CODE}`;
-
-        const encryptionKey = `${process.env.NEXT_PUBLIC_ENCRYPION_KEY}`;
-
-        const encryptedClientId = await encryptByKeyV2(clientId, encryptionKey);
-        const encryptedClientSecret = await encryptByKeyV2(clientSecret, encryptionKey);
-
-        const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers-auth/validate-otp`;
-
         try {
-            const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "clientid": encryptedClientId,
-                    "clientsecret": encryptedClientSecret,
-                    "authcode": authCode,
-                },
-                body: JSON.stringify(body),
-            });
-            const data = await response.json();
-            if (data.status === 200) {
+            const data = await validateOtptoUser(body)
+            if (data.status == 200) {
                 localStorage.setItem("access_token", data.data.tokens.access_token)
                 if (!data.data.old_user) {
                     loanInfoSubmit();
                 }
                 onVerified();
-
             } else {
-                alert(data.message || "OTP verification failed.");
+                toast.error('Not able to validate OTP');
             }
-        } catch (error) {
-            console.error("OTP verification error:", error);
-            alert("Something went wrong!");
+        } catch (error: any) {
+            const message = error.response?.data?.message || error.message || 'Not able to validate OTP'
+            toast.error(message)
+        } finally {
+            // setLoading(false);
         }
-    };
+    }
 
     const loanInfoSubmit = async () => {
         const questionsData = JSON.parse(localStorage.getItem('questions') || '[]');
@@ -178,32 +140,18 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
         const body = {
             questions: questionsData
         };
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-            alert("Access token missing");
-            return;
-        }
-
-        const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers/primary-screening-questions/save`;
 
         try {
-            const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`, // ⬅️ Set token here
-                },
-                body: JSON.stringify(body),
-            });
-
-            const data = await response.json();
+            const data = await savePrimaryQuestion(body);
             if (data.status === 200) {
             } else {
-                //alert(data.message || "PAN verification failed.");
+                toast.error('Failed to save primary questions');
             }
-        } catch (error) {
-            console.error("Save Question API Error:", error);
-            //alert("Something went wrong.");
+        } catch (error:any) {
+            const message = error.response?.data?.message || error.message || 'Failed to save primary questions';
+            toast.error(message)
+        } finally {
+            // setLoading(false);
         }
     };
 

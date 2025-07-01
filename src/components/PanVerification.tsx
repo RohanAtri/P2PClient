@@ -1,4 +1,6 @@
+import { panValidate } from "@/services/auth-verificationService";
 import React, { useState } from "react";
+import toast from 'react-hot-toast';
 
 type PANVerificationProps = {
     onVerified: () => void;
@@ -41,34 +43,18 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
             employment_type: empType,
             concents: consents,
         };
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-            alert("Access token missing");
-            return;
-        }
-
-        const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers/verification`;
 
         try {
-            const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`, // ⬅️ Set token here
-                },
-                body: JSON.stringify(body),
-            });
-
-            const data = await response.json();
+            const data = await panValidate(body)
             if (data.status === 200) {
-                alert('PAN Varified')
+                toast.success(data.message);
                 onVerified();
             } else {
-                //alert(data.message || "PAN verification failed.");
+                toast.error('Not able to PAN Verification');
             }
-        } catch (error) {
-            console.error("PAN API Error:", error);
-            //alert("Something went wrong.");
+        } catch (error:any) {
+            const message = error.response?.data?.message || error.message || 'Not able to PAN Verification';
+            toast.error(message)
         }
     };
 
@@ -223,8 +209,8 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
                                     type="submit"
                                     disabled={!isFormValid()}
                                     className={`px-6 py-2 text-white rounded-[2px] transition duration-300 ease-in-out ${isFormValid()
-                                            ? "bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer"
-                                            : "bg-[#A3A3A3] cursor-not-allowed"
+                                        ? "bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer"
+                                        : "bg-[#A3A3A3] cursor-not-allowed"
                                         }`}
                                 >
                                     Continue

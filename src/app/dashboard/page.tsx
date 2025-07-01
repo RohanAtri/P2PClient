@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 
 type Props = {}
@@ -15,7 +16,8 @@ export default function Dashboard() {
   };
   
   return (
-    <div className="w-full h-[calc(100vh-65px)] md:h-[calc(100vh-85px)] flex bg-[#F8F7F4] text-[#000]">
+    <ProtectedRoute>
+      <div className="w-full h-[calc(100vh-65px)] md:h-[calc(100vh-85px)] flex bg-[#F8F7F4] text-[#000]">
       {/* Sidebar */}
       <aside className="w-[250px] bg-white shadow-md p-6 flex flex-col">
         <div className="flex items-center gap-2 mb-8">
@@ -98,5 +100,7 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
+    </ProtectedRoute>
+    
   )
 }

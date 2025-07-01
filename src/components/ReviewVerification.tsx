@@ -1,28 +1,25 @@
+import { getReviewData } from "@/services/auth-verificationService";
 import React, { useEffect, useState } from "react";
+import toast from 'react-hot-toast'
 
 const ReviewVerification = () => {
-const [reviewData, setReviewData] = useState<any>({});
+    const [reviewData, setReviewData] = useState<any>({});
 
     useEffect(() => {
-            const fetchReview = async () => {
-                try {
-                    const accessToken = localStorage.getItem("access_token");
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}customers/loan/initial`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
-    
-                    const data = await response.json();
-                    setReviewData(data);
-                } catch (error) {
-                    console.error("Error fetching banks:", error);
-                }
-            };
-    
-            fetchReview();
-        }, []);
+        const fetchReview = async () => {
+            try {
+                const data = await getReviewData();
+                setReviewData(data);
+            } catch (error: any) {
+                const message = error.response?.data?.message || error.message || 'Not able to send OTP'
+                toast.error(message)
+            } finally {
+                // setLoading(false);
+            }
+        };
+
+        fetchReview();
+    }, []);
 
     return (
         <>
@@ -31,12 +28,12 @@ const [reviewData, setReviewData] = useState<any>({});
                     <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-5 text-[#171717]">
                         Your Application is Under Review
                     </h2>
-                    
+
                     <p className="text-[16px] leading-[25px] font-normal text-center text-[#0A0A0A] mb-5">
                         We’re currently assessing your profile and financial details. You’ll be notified once your loan eligibility is confirmed.
                     </p>
 
-                     <p className="text-[16px] leading-[25px] font-normal text-center text-[#0A0A0A] mb-5">
+                    <p className="text-[16px] leading-[25px] font-normal text-center text-[#0A0A0A] mb-5">
                         Expected processing time: <span className="font-semibold">{reviewData.processing_time}.</span>
                     </p>
 
@@ -53,7 +50,7 @@ const [reviewData, setReviewData] = useState<any>({});
                 </div>
             </div>
         </>
-)
+    )
 }
 
 export default ReviewVerification;

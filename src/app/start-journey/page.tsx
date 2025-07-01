@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
-import { encryptByKeyV2 } from '@/lib/utils/crypto';
 import { removeComma } from "@/lib/utils/format";
 import Image from "next/image";
 import toast from 'react-hot-toast';
+import { getPrimaryQuestions } from '@/services/auth-verificationService';
 
 export default function StartJourney() {
     const [loading, setLoading] = useState(false);
@@ -25,46 +25,27 @@ export default function StartJourney() {
 
     useEffect(() => {
         const start = async () => {
-            const clientId = `${process.env.NEXT_PUBLIC_CLIENT_ID}`;
-            const clientSecret = `${process.env.NEXT_PUBLIC_CLIENT_SECRET}`;
-            const authCode = `${process.env.NEXT_PUBLIC_AUTH_CODE}`;
-
-            const encryptionKey = `${process.env.NEXT_PUBLIC_ENCRYPION_KEY}`; // Must be 32 characters (256 bits)
-
-            const encryptedClientId = await encryptByKeyV2(clientId, encryptionKey);
-            const encryptedClientSecret = await encryptByKeyV2(clientSecret, encryptionKey);
-
-            const apiUrl = `${process.env.NEXT_PUBLIC_SERVER_API}customers-auth/primary-screening-question`;
-
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'clientid': encryptedClientId,
-                        'clientsecret': encryptedClientSecret,
-                        'authcode': authCode
-                    },
-                });
+                const data = await getPrimaryQuestions()
 
-                const data = await response.json();
-                if (data.status == 200) {
-                    const questions = data.data.resData;
-                    setPrimaryQuestions(questions);
-                    setLoanAmountFunction(questions);
-                    setTenureFunction(questions);
+                if (data.status === 200) {
+                    const questions = data.data.resData
+                    setPrimaryQuestions(questions)
+                    setLoanAmountFunction(questions)
+                    setTenureFunction(questions)
                 } else {
-                    toast.error('Not able fetch primary questions');
+                    toast.error('Not able to fetch primary questions')
                 }
-            } catch (error:any) {
-                toast.error(error);
+            } catch (error: any) {
+                const message = error.response?.data?.message || error.message || 'Not able to fetch primary questions'
+                toast.error(message)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
 
-        start();
-    }, []);
+        start()
+    }, [])
 
     function setLoanAmountFunction(questions: any[]) {
         const min = removeComma(questions[0]?.answers?.min);
@@ -127,7 +108,7 @@ export default function StartJourney() {
                         priority
                     />
                 </div>
-                
+
                 {/* Form Section */}
                 <div className='w-full md:w-[65%] h-full flex flex-col p-6 sm:p-8 md:px-10 md:py-14'>
                     <form onSubmit={handleSubmit}>
@@ -156,7 +137,7 @@ export default function StartJourney() {
                                     type="range"
                                     min={minLoan}
                                     max={maxLoan}
-                                    step={10000}
+                                    step={5000}
                                     value={loanAmount}
                                     onChange={(e) => setLoanAmount(Number(e.target.value))}
                                     className="custom-range w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -193,7 +174,7 @@ export default function StartJourney() {
                                     type="range"
                                     min={minTenure}
                                     max={maxTenure}
-                                    step={1}
+                                    step={3}
                                     value={tenure}
                                     onChange={(e) => setTenure(Number(e.target.value))}
                                     className="custom-range w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -233,11 +214,10 @@ export default function StartJourney() {
                             <button
                                 type="submit"
                                 disabled={!selectPurpose}
-                                className={`px-4 sm:px-6 py-1 sm:py-2 text-white rounded-[2px] transition duration-300 ease-in-out text-sm sm:text-base ${
-                                    selectPurpose
+                                className={`px-4 sm:px-6 py-1 sm:py-2 text-white rounded-[2px] transition duration-300 ease-in-out text-sm sm:text-base ${selectPurpose
                                         ? 'bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer'
                                         : 'bg-[#A3A3A3] cursor-not-allowed'
-                                }`}
+                                    }`}
                             >
                                 Submit
                             </button>

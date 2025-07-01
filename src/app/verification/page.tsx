@@ -7,8 +7,10 @@ import ReviewVerification from "@/components/ReviewVerification";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from 'react-hot-toast';
+import { getUserstatusTracker } from "@/services/auth-verificationService";
 
 export default function Verification() {
+    const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
     const router = useRouter();
 
@@ -56,17 +58,9 @@ export default function Verification() {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const accessToken = localStorage.getItem("access_token");
-                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_API}customers/status-tracker`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                const data = await response.json();
+                const data = await getUserstatusTracker()
                 if (data.status === 200) {
-                    if (data.data.is_onboarded) {
+                    if (data.is_onboarded) {
                         router.push("/dashboard");
                     } else {
                         const currentStage: number = Number(data.data.current_stage);
@@ -77,18 +71,27 @@ export default function Verification() {
                             setStep(step);
                         }
                     }
-
                 } else {
-                    toast.error('Failed to ')
-                    setStep(1);
+                    toast.error('Not able to fetch Use status')
                 }
-            } catch (error) {
-                console.error("Error fetching banks:", error);
-                setStep(1);
+            } catch (error: any) {
+                const message = error.response?.data?.message || error.message || 'Not able to fetch Use status'
+                toast.error(message)
+            } finally {
+                setLoading(false)
             }
-        };
+        }
 
-        fetchStatus();
+        const token = localStorage.getItem('access_token')
+        if (token) {
+            fetchStatus()
+        } else {
+            if(localStorage.getItem('access_token')) {
+                setStep(1);
+            } else {
+                router.push("/questions");
+            }
+        }
     }, []);
 
     return (
