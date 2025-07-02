@@ -20,7 +20,7 @@ const handleAmtChange = (value: string) => {
 
     return (
         <div className="w-full h-[calc(100vh-65px)] md:h-[calc(100vh-85px)] flex items-center justify-center bg-[#fff]">
-            <div className="w-full h-full xl:w-[80%] xl:h-[85%] bg-primaryGray flex justify-center items-center">
+            <div className="w-full h-full xl:w-[80%] xl:h-[85%] bg-[#F9F7E8] flex justify-center items-center">
                 <div className='hidden md:block md:w-[35%] h-full'>
                     <Image
                         src="/lenderJourney.svg"
@@ -38,7 +38,7 @@ const handleAmtChange = (value: string) => {
                         </h2>
                          <div className="mb-5 sm:mb-5">
                             <label className="block text-sm sm:text-[14px] font-medium text-[#0A0A0A] mb-1">
-                                How much amount you want to lender <span className="text-red-500">*</span>
+                                How much amount you want to lend <span className="text-red-500">*</span>
                             </label>
                             <input
                                     type="text"
