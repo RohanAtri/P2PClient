@@ -1,0 +1,245 @@
+import { panValidate } from "@/services/auth-verificationService";
+import React, { useState } from "react";
+import toast from 'react-hot-toast';
+
+type PANVerificationProps = {
+    onVerified: () => void;
+};
+
+const PanTwoVerification = ({ onVerified }: PANVerificationProps) => {
+    const [gender, setGender] = useState('Male');
+    const [empType, setEmpType] = useState('Salaried');
+
+    const genderOptions = ['Male', 'Female', 'Other'];
+    const empOptions = ['Salaried', 'Self Employed'];
+    const panRegex = /^[A-Z]{3}[PH][A-Z][0-9]{4}[A-Z]$/;
+
+    const [pan, setPan] = useState("");
+    const [dob, setDob] = useState("");
+    const [name, setName] = useState("");
+    const [consents, setConsents] = useState<string[]>([]);
+
+    const formatDob = (dateStr: string) => {
+        if (!dateStr) return "";
+        const [yyyy, mm, dd] = dateStr.split("-");
+        return `${dd}/${mm}/${yyyy}`;
+    };
+
+    const isFormValid = () => {
+        return (
+            name.trim() !== "" &&
+            dob.trim() !== "" &&
+            panRegex.test(pan) &&
+            consents.length == 2
+        );
+    };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const body = {
+            pan,
+            dob: formatDob(dob),
+            name,
+            gender,
+            employment_type: empType,
+            concents: consents,
+        };
+
+        try {
+            const data = await panValidate(body)
+            if (data.status === 200) {
+                toast.success(data.message);
+                onVerified();
+            } else {
+                toast.error('Not able to PAN Verification');
+            }
+        } catch (error: any) {
+            const message = error.response?.data?.message || error.message || 'Not able to PAN Verification';
+            toast.error(message)
+        }
+    };
+
+
+    return (
+        <div className="h-full flex flex-col md:justify-center items-center overflow-auto">
+            <form onSubmit={handleSubmit}>
+                <div className="w-full h-full flex flex-col justify-center">
+                    <h2 className="text-2xl font-semibold text-center mb-3 text-[#171717]">
+                        Enter your PAN Number and Date of Birth
+                    </h2>
+
+                    <div className="mb-3">
+                        <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
+                            Name <span className="text-red-500">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Enter your name as per PAN card"
+                            className="w-full border border-[#A3A3A3] outline-none placeholder-[#A3A3A3] px-3 py-2 rounded-[2px] bg-white"
+                        />
+                    </div>
+
+                    <div className="mb-3 lg:flex justify-between">
+                        <div className="w-full lg:w-[48%] mb-3 lg:mb-0">
+                            <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
+                                PAN <span className="text-red-500">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                placeholder="Enter your PAN"
+                                value={pan}
+                                onChange={(e) => setPan(e.target.value.toUpperCase())}
+                                maxLength={10}
+                                className={`w-full border outline-none px-3 py-2 rounded-[2px] bg-white ${pan && !panRegex.test(pan) ? "border-red-500" : "border-[#A3A3A3]"
+                                    }`}
+                            />
+                            {pan && !panRegex.test(pan) && (
+                                <p className="text-red-500 text-sm">Invalid PAN format</p>
+                            )}
+                        </div>
+                        <div className="w-full lg:w-[48%]">
+                            <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
+                                Date of Birth <span className="text-red-500">*</span>
+                            </label>
+
+                            <input
+                                type="date"
+                                value={dob}
+                                onChange={(e) => setDob(e.target.value)}
+                                className="w-full border border-[#A3A3A3] outline-none placeholder-[#A3A3A3] px-3 py-2 rounded-[2px] bg-white"
+                            />
+                        </div>
+                    </div>
+
+                    {/* <div className="mb-3">
+                        <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
+                            Date of Birth <span className="text-red-500">*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            value={dob}
+                            onChange={(e) => setDob(e.target.value)}
+                            className="w-full border border-[#A3A3A3] outline-none placeholder-[#A3A3A3] px-3 py-2 rounded-[2px] bg-white"
+                        />
+                    </div> */}
+
+                    <div className="mb-3">
+                        <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
+                            Gender <span className="text-red-500">*</span>
+                        </label>
+
+                        <div className="flex justify-between space-x-4 w-full">
+                            {genderOptions.map((option) => (
+                                <label
+                                    key={option}
+                                    className={`w-[30%] flex items-center border rounded-[1px] px-4 py-2 cursor-pointer transition-all duration-150
+                                        bg-[#fff] border-[#A3A3A3]
+        `}
+        // ${gender === option ? 'border-black bg-gray-100' : 'border-gray-300'}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value={option}
+                                        checked={gender === option}
+                                        onChange={() => setGender(option)}
+                                        className="form-radio text-black mr-2 accent-black"
+                                    />
+                                    <span className="text-[#0A0A0A] text-[16px]">{option}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="block text-[14px] font-medium text-[#0A0A0A] mb-1">
+                            Employment Type <span className="text-red-500">*</span>
+                        </label>
+
+                        <div className="flex justify-between space-x-4 w-full">
+                            {empOptions.map((option) => (
+                                <label
+                                    key={option}
+                                    className={`w-[47%] flex items-center border rounded-[1px] px-4 py-2 cursor-pointer transition-all duration-150
+          bg-[#fff] border-[#A3A3A3]
+        `}
+        // ${empType === option ? 'border-black bg-gray-100' : 'border-gray-300'}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="empType"
+                                        value={option}
+                                        checked={empType === option}
+                                        onChange={() => setEmpType(option)}
+                                        className="form-radio text-black mr-2 accent-black"
+                                    />
+                                    <span className="text-[#0A0A0A] text-[16px]">{option}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-start space-x-2 mb-3">
+                        <input
+                            type="checkbox"
+                            onChange={(e) => {
+                                const checked = e.target.checked;
+                                const label = "CIBIL";
+                                setConsents((prev) =>
+                                    checked ? [...prev, label] : prev.filter((c) => c !== label)
+                                );
+                            }}
+                            id="terms"
+                            className="w-4 h-4  text-white bg-black border-none rounded checked:bg-black checked:border-none"
+                        />
+                        <label htmlFor="terms" className="text-sm text-[#171717]">
+                            I authorise 1 Finance P2P to access my CIBIL score
+                        </label>
+                    </div>
+                    <div className="flex items-center justify-start space-x-2 mb-3">
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            onChange={(e) => {
+                                const checked = e.target.checked;
+                                const label = "PAN_CKYC"; // second checkbox
+                                setConsents((prev) =>
+                                    checked ? [...prev, label] : prev.filter((c) => c !== label)
+                                );
+                            }}
+                            className="w-4 h-4  text-white bg-black border-none rounded checked:bg-black checked:border-none"
+                        />
+                        <label htmlFor="terms" className="text-sm text-[#171717]">
+                            I agree that my data can downloaded from PAN and CKYC
+                        </label>
+                    </div>
+
+                    <div className="flex justify-center items-center">
+                        <button
+                            type="submit"
+                            disabled={!isFormValid()}
+                            className={`relative px-6 py-2 text-white rounded-[2px] transition duration-300 ease-in-out 
+                                
+                                 before:content-[''] before:absolute before:inset-0 before:rounded-[3px] before:border
+                                    before:-z-10 before:translate-y-[3px] before:translate-x-[3px] 
+                                    z-10
+
+                                ${isFormValid()
+                                ? "bg-[#737373] hover:bg-[#5e5e5e] cursor-pointer before:border-[#737373]"
+                                : "bg-[#A3A3A3] cursor-not-allowed before:border-[#A3A3A3]"
+                                }`}
+                        >
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    )
+}
+
+export default PanTwoVerification;
