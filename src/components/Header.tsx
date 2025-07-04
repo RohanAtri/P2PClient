@@ -30,7 +30,7 @@ const Header = () => {
 
   return (
     <>
-      <nav className="w-full h-[65px] md:h-[85px] bg-black text-white py-3 md:py-5 px-4 sm:px-6 md:px-8 lg:px-[140px] flex justify-between items-center">
+      <nav className="w-full h-[65px] md:h-[85px] bg-foreground text-white py-3 md:py-5 px-4 sm:px-6 md:px-8 lg:px-[140px] flex justify-between items-center">
         <img
           src="/icon.svg"
           alt="Lender Icon"

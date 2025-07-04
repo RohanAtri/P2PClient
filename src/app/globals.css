@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --verification-background: #F9F7E8;
+  --stepper-upper: #22443D;
+  --stepper-lower: #162F2D;
 }
 
 @theme inline {
@@ -10,6 +13,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-verification-background: var(--verification-background);
+  --color-stepper-upper: var(--stepper-upper);
+  --color-stepper-lower: var(--stepper-lower);
 }
 
 @media (prefers-color-scheme: dark) {

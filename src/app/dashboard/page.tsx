@@ -27,7 +27,7 @@ export default function Dashboard() {
           <span className="font-medium text-lg">John</span>
         </div>
         <nav className="flex flex-col gap-4 text-sm">
-          <a href="#" className="text-[#777]">Profile</a>
+          <a href="#" className="text-[#777]">Dashboard</a>
           <a href="#" className="text-[#777]">Offers</a>
           <a href="#" className="text-[#777]">Notification</a>
           <a href="#" className="text-[#777]">Policies & Agreements</a>

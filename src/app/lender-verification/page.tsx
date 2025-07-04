@@ -46,10 +46,10 @@ export default function LenderVerification() {
 
     return (
         <div className="w-full h-[calc(100vh-65px)] md:h-[calc(100vh-85px)] flex items-center justify-center bg-[#fff]">
-            <div className="w-full h-full xl:w-[80%] xl:h-[85%] bg-[#F9F7E8] flex flex-col lg:flex-row shadow-md">
+            <div className="w-full h-full xl:w-[80%] xl:h-[85%] bg-verification-background flex flex-col lg:flex-row shadow-md">
                 {/* Sidebar (stacked on mobile/tablet, 40% width on large) */}
-                <div className="w-full lg:w-[35%] flex justify-center items-center bg-[linear-gradient(to_bottom,_#22443D,_#162F2D)] p-4">
-                    <div className="lg:w-[60%] w-full lg:h-[70%]">
+                <div className="w-full lg:w-[35%] flex justify-center items-center bg-[linear-gradient(to_bottom,_var(--stepper-upper),_var(--stepper-lower))] p-4">
+                    <div className="lg:w-[60%] w-full lg:h-[400px]">
                         <div className="w-full h-full md:py-10 py-4 px-2">
                             <ol className="relative md:pl-6 flex lg:flex-col justify-between h-full">
                                 {stepLabels.map((label, idx) => {
