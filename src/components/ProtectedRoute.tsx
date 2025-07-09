@@ -4,17 +4,20 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { validateTOken } from '@/services/auth-verificationService'
 import toast from 'react-hot-toast'
+import { useLoaderStore } from '@/lib/store/useLoaderStore'
 
 interface ProtectedRouteProps {
     children: React.ReactNode
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+    const setLoading = useLoaderStore.getState().setLoading;
     const router = useRouter()
-    const [loading, setLoading] = useState(true)
+    //const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const checkAuth = async () => {
+            setLoading(true);
             const token = localStorage.getItem('access_token')
             if (!token) {
                 router.replace('/login')
@@ -42,9 +45,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         checkAuth()
     }, [router])
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
+    // if (loading) {
+    //     return <div>Loading...</div>
+    // }
 
     return <>{children}</>
 }

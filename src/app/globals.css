@@ -41,6 +41,7 @@ body {
   width: 100%;
   height: 8px;
   background-color: #DED9CA;
+  border-radius: 5px;
 }
 
 .custom-range::-webkit-slider-thumb {
