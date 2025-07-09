@@ -3,6 +3,7 @@ import { sendOtptoUser, validateOtptoUser } from '@/services/auth-verificationSe
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from "next/navigation";
+import { useLoaderStore } from "@/lib/store/useLoaderStore";
 
 type Props = {}
 
@@ -13,6 +14,7 @@ export default function Dashboard() {
     const [showOtpScreen, setShowOtpScreen] = useState(false);
     const [otp, setOtp] = useState(Array(6).fill(""));
     const [timer, setTimer] = useState(60);
+    const setLoading = useLoaderStore.getState().setLoading;
 
     const handleMobileChange = (value: string) => {
         if (/^\d{0,10}$/.test(value)) {
@@ -93,6 +95,7 @@ export default function Dashboard() {
     const sendOTP = async (bodyParam?: typeof requestBody) => {
         const bodyToSend = bodyParam || requestBody;
         try {
+            setLoading(true);
             const data = await sendOtptoUser(bodyToSend)
             if (data.status == 200) {
                 setShowOtpScreen(true);
@@ -104,7 +107,7 @@ export default function Dashboard() {
             const message = error.response?.data?.message || error.message || 'Not able to send OTP'
             toast.error(message)
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     }
 
@@ -124,6 +127,7 @@ export default function Dashboard() {
         };
 
         try {
+            setLoading(true);
             const data = await validateOtptoUser(body);
             if (data.status == 200) {
                 localStorage.setItem("access_token", data.data.tokens.access_token)
@@ -138,7 +142,7 @@ export default function Dashboard() {
             const message = error.response?.data?.message || error.message || 'Not able to validate OTP'
             toast.error(message)
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 

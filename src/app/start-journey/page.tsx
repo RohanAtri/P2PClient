@@ -5,9 +5,9 @@ import { removeComma } from "@/lib/utils/format";
 import Image from "next/image";
 import toast from 'react-hot-toast';
 import { getPrimaryQuestions } from '@/services/auth-verificationService';
+import { useLoaderStore } from '@/lib/store/useLoaderStore';
 
 export default function StartJourney() {
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const [primaryQuestions, setPrimaryQuestions] = useState<any[]>([]);
     const [loanAmount, setLoanAmount] = useState(0);
@@ -23,7 +23,10 @@ export default function StartJourney() {
     const [maxTenure, setMaxTenure] = useState(0);
     const [stepTenure, setStepTenure] = useState(1);
 
+    const setLoading = useLoaderStore.getState().setLoading;
+
     useEffect(() => {
+        setLoading(true);
         const start = async () => {
             try {
                 const data = await getPrimaryQuestions()

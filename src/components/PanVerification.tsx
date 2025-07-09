@@ -1,12 +1,14 @@
 import { panValidate } from "@/services/auth-verificationService";
 import React, { useState } from "react";
 import toast from 'react-hot-toast';
+import { useLoaderStore } from "@/lib/store/useLoaderStore";    
 
 type PANVerificationProps = {
     onVerified: () => void;
 };
 
 const PanVerification = ({ onVerified }: PANVerificationProps) => {
+    const setLoading = useLoaderStore.getState().setLoading;
     const [gender, setGender] = useState('Male');
     const [empType, setEmpType] = useState('Salaried');
 
@@ -45,6 +47,7 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
         };
 
         try {
+            setLoading(true);
             const data = await panValidate(body)
             if (data.status === 200) {
                 toast.success(data.message);
@@ -55,6 +58,8 @@ const PanVerification = ({ onVerified }: PANVerificationProps) => {
         } catch (error:any) {
             const message = error.response?.data?.message || error.message || 'Not able to PAN Verification';
             toast.error(message)
+        } finally {
+            setLoading(false);
         }
     };
 

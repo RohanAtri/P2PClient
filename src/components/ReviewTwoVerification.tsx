@@ -1,20 +1,23 @@
 import { getReviewData } from "@/services/auth-verificationService";
 import React, { useEffect, useState } from "react";
-import toast from 'react-hot-toast'
+import toast from 'react-hot-toast';
+import { useLoaderStore } from "@/lib/store/useLoaderStore";
 
 const ReviewTwoVerification = () => {
+    const setLoading = useLoaderStore.getState().setLoading;
     const [reviewData, setReviewData] = useState<any>({});
 
     useEffect(() => {
         const fetchReview = async () => {
             try {
+                setLoading(true);
                 const data = await getReviewData();
                 setReviewData(data);
             } catch (error: any) {
                 const message = error.response?.data?.message || error.message || 'Not able to send OTP'
                 toast.error(message)
             } finally {
-                // setLoading(false);
+                setLoading(false);
             }
         };
 

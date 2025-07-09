@@ -1,3 +1,4 @@
+import { useLoaderStore } from "@/lib/store/useLoaderStore";
 import { savePrimaryQuestion, sendOtptoUser, validateOtptoUser } from "@/services/auth-verificationService";
 import React, { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
@@ -7,6 +8,7 @@ type MobileVerificationProps = {
 };
 
 const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
+    const setLoading = useLoaderStore.getState().setLoading;
     const [requestBody, setRequestBody] = useState<{ mobile_number: string; name: string } | null>(null);
     const [showOtpScreen, setShowOtpScreen] = useState(false);
     const [otp, setOtp] = useState(Array(6).fill(""));
@@ -85,6 +87,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
     const sendOTP = async (bodyParam?: typeof requestBody) => {
         const bodyToSend = bodyParam || requestBody;
         try {
+            setLoading(true);
             const data = await sendOtptoUser(bodyToSend)
             if (data.status == 200) {
                 setShowOtpScreen(true);
@@ -96,7 +99,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
             const message = error.response?.data?.message || error.message || 'Not able to send OTP'
             toast.error(message)
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     }
 
@@ -116,6 +119,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
         };
 
         try {
+            setLoading(true);
             const data = await validateOtptoUser(body)
             if (data.status == 200) {
                 localStorage.setItem("access_token", data.data.tokens.access_token)
@@ -131,7 +135,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
             const message = error.response?.data?.message || error.message || 'Not able to validate OTP'
             toast.error(message)
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     }
 
@@ -143,6 +147,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
         };
 
         try {
+            setLoading(true);
             const data = await savePrimaryQuestion(body);
             if (data.status === 200) {
                 localStorage.removeItem('questions')
@@ -153,7 +158,7 @@ const MobileVerification = ({ onVerified }: MobileVerificationProps) => {
             const message = error.response?.data?.message || error.message || 'Failed to save primary questions';
             toast.error(message)
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 

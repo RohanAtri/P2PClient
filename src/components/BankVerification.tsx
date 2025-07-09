@@ -1,9 +1,10 @@
 import { getBankList, saveBank } from "@/services/auth-verificationService";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useLoaderStore } from "@/lib/store/useLoaderStore";
 
 const BankVerification = () => {
-
+    const setLoading = useLoaderStore.getState().setLoading;
     const [bankList, setBanks] = useState([]);
     const [selectedBankCode, setSelectedBankCode] = useState("");
 
@@ -42,6 +43,7 @@ const BankVerification = () => {
         }
 
         try {
+            setLoading(true);
             const data = await saveBank(selectedBankCode);
             if (data.status === 200) {
                 const redirectUrl = data.data.url;
@@ -54,6 +56,8 @@ const BankVerification = () => {
         } catch (error: any) {
             const message = error.response?.data?.message || error.message || 'Failed to save Bank';
             toast.error(message)
+        } finally {
+            setLoading(false);
         }
     };
 
