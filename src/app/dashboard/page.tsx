@@ -75,7 +75,7 @@ export default function Dashboard() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 p-8 overflow-y-auto">{renderContent()}</main>
+        <main className="flex-1">{renderContent()}</main>
       </div>
     </ProtectedRoute>
 

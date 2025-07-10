@@ -32,7 +32,7 @@ export default function DashboardContent() {
     const [rangeStyle, setRangeStyle] = useState({});
 
     return (
-        <div>
+        <div className="p-6 overflow-y-auto h-[calc(100vh-65px)] md:h-[calc(100vh-85px)]">
             <h1 className="text-2xl font-semibold mb-4">
                 Hello John, you have been sanctioned a loan of Rs 1,00,000
             </h1>
