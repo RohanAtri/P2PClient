@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #292928;
   --verification-background: #F9F7E8;
   --stepper-upper: #22443D;
   --stepper-lower: #162F2D;
@@ -20,7 +20,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #292928;
     --foreground: #ededed;
   }
 }
@@ -29,6 +29,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: spirits-soft, serif;
+  /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -40,7 +41,7 @@ body {
   appearance: none;
   width: 100%;
   height: 8px;
-  background-color: #DED9CA;
+  background-color: #EBE9DB;
   border-radius: 5px;
 }
 
@@ -48,7 +49,7 @@ body {
   appearance: none;
   width: 20px;
   height: 20px;
-  background-color: black;
+  background-image: linear-gradient(to bottom, #22443D, #162F2D);
   border-radius: 50%;
   margin-top: 0px;
   cursor: pointer;
@@ -57,14 +58,14 @@ body {
 .custom-range::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background-color: black;
+  background-image: linear-gradient(to bottom, #22443D, #162F2D);
   border: none;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .custom-range::-moz-range-progress {
-  background-color: black;
+  background-image: linear-gradient(to bottom, #22443D, #162F2D);
   height: 8px;
   border-radius: 4px;
 }
@@ -74,4 +75,12 @@ button {
 }
 button:disabled {
   cursor: not-allowed;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
 }
