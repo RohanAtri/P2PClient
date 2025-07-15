@@ -34,14 +34,10 @@ export default function RightSidebar() {
   return (
     <aside
       className={clsx(
-        // Mobile/tablet: fixed overlay
-        'fixed md:static top-0 right-0 md:right-auto w-[80vw] max-w-[304px] md:w-[304px] h-full bg-white shadow-lg transition-transform z-50 p-4 md:shadow-none md:z-auto md:translate-x-0',
+        'fixed right-0 w-[304px] h-full bg-white shadow-lg transition-transform z-50 p-4',
         {
-          // Overlay only on mobile/tablet
-          'translate-x-0': isOpen,
-          'translate-x-full': !isOpen,
-          // On desktop, always visible
-          'md:translate-x-0': true,
+          'translate-x-0': !isDashboard || isOpen,
+          'translate-x-full': isDashboard && !isOpen,
         }
       )}
     >

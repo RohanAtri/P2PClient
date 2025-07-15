@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 export default function BorrowerLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarToggleProvider>
-      <div className="flex flex-row min-h-screen">
+      <div className="flex">
         {/* Page Content */}
         <div className="flex-1">{children}</div>
         {/* Sidebar */}
