@@ -33,21 +33,28 @@ export default function RightSidebar() {
 
   return (
     <aside
+      // className={clsx(
+      //   'fixed right-0 w-[304px] h-full bg-white shadow-lg transition-transform z-50 p-4',
+      //   {
+      //     'translate-x-0': !isDashboard || isOpen,
+      //     'translate-x-full': isDashboard && !isOpen,
+      //   }
+      // )}
       className={clsx(
         'fixed right-0 w-[304px] h-full bg-white shadow-lg transition-transform z-50 p-4',
         {
-          'translate-x-0': !isDashboard || isOpen,
-          'translate-x-full': isDashboard && !isOpen,
+          'translate-x-0': isOpen,
+          'translate-x-full':!isOpen,
         }
       )}
     >
       <div className='flex justify-end'>
-      {isDashboard && (
+      {/* {isDashboard && ( */}
         
         <button onClick={toggleSidebar} className="p-2 outline-none border-none bg-transparent">
           <RxCross2 size={20} className='text-[#0A0A0A]'/>
         </button>
-      )}
+      {/* )} */}
       </div>
 
       <div className="w-20 h-20 relative rounded-full overflow-hidden mb-4">

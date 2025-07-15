@@ -11,11 +11,12 @@ import { IoCallOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 import Footer from '@/components/Footer';
+import { IoMdCheckmark } from "react-icons/io";
 
 export default function DashboardPage() {
     const { toggleSidebar } = useSidebarToggle();
     const progress = Math.min((5 / 25) * 100, 100);
-
+    const currentStep = 2;
 
     return (
         <>
@@ -24,50 +25,87 @@ export default function DashboardPage() {
                     <div className="absolute top-0 left-0 w-full h-[28%] bg-[#292928] z-0" />
 
                     <div className="w-[70%] relative z-10 py-10">
-                        <div className='mb-8'>
-                            <div className='flex justify-between text-white mb-10'>
-                                <div className='flex gap-3'>
-                                    <Image src="/Profile.png" alt="" width={40} height={30} className=" rounded-full object-cover border border-[#FFFFFF]" />
-                                    <h1 className='text-3xl font-semibold'>Hello Saish Mankane</h1>
+                        <div className='flex justify-between text-white mb-10'>
+                            <div className='flex gap-3'>
+                                <Image src="/Profile.png" alt="" width={40} height={30} className=" rounded-full object-cover border border-[#FFFFFF]" />
+                                <h1 className='text-3xl font-semibold'>Hello Saish Mankane</h1>
+                            </div>
+                            <div className='flex gap-2'>
+                                <IoIosNotificationsOutline className='text-2xl cursor-pointer' />
+                                <IoIosMenu onClick={toggleSidebar} className='text-2xl cursor-pointer' />
+                            </div>
+                        </div>
+
+                        <div className='bg-[#FFFFFF] border border-[#F1F0EC] p-4 mb-8'>
+                            <div className='flex justify-between pb-4'>
+                                <h1 className='text-2xl font-semibold'>Loan Details</h1>
+                                <span className='bg-[#F3EEE8] px-2 py-1'>Loan ID: 234789</span>
+                            </div>
+                            <div className='flex justify-between items-center'>
+                                <div className='flex gap-4'>
+                                    <div className='bg-[#E6F2F9] px-2 h-12 w-12 flex items-center justify-center'>
+                                        <GoDatabase size={26} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <h4 className='text-[#61625E]'>Loan Disbursed</h4>
+                                        <p className='font-semibold'> {'\u20B9'}3,00,000</p>
+                                    </div>
                                 </div>
-                                <div className='flex gap-2'>
-                                    <IoIosNotificationsOutline className='text-2xl cursor-pointer' />
-                                    <IoIosMenu onClick={toggleSidebar} className='text-2xl cursor-pointer' />
+                                <div className='flex gap-4'>
+                                    <div className='bg-[#E6F2F9] px-2 h-12 w-12 flex items-center justify-center'>
+                                        <GoDatabase size={26} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <h4 className='text-[#61625E]'>Loan Tenure</h4>
+                                        <p className='font-semibold'>36 Months</p>
+                                    </div>
+                                </div>
+                                <div className='flex gap-4'>
+                                    <div className='bg-[#E6F2F9] px-2 h-12 w-12 flex items-center justify-center'>
+                                        <GoDatabase size={26} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <h4 className='text-[#61625E]'>Outstanding loan (Principal + Interest)</h4>
+                                        <p className='font-semibold'> {'\u20B9'}4,00,000</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='bg-[#FFFFFF] border border-[#F1F0EC] p-4'>
-                                <div className='flex justify-between pb-4'>
-                                    <h1 className='text-2xl font-semibold'>Loan Details</h1>
-                                    <span className='bg-[#F3EEE8] px-2 py-1'>Loan ID: 234789</span>
+                        </div>
+
+                        <div className='bg-[#F9F7E8] shadow-sm mb-8 p-20 flex flex-col justify-center items-center'>
+                            <div className="flex items-center mb-4">
+                {[1, 2, 3, 4, 5, 6].map((step, index) => (
+                    <div key={step} className="flex items-center">
+                    <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold border border-black
+                        ${step <= currentStep ? 'bg-[#F9FBE9] text-black' : 'bg-black text-white'}`}
+                    >
+                        {step <= currentStep ? <IoMdCheckmark size={16} /> : step}
+                    </div>
+                    {index < 5 && <div className="w-6 h-[2px] bg-black" />}
+                    </div>
+                ))}
+                            </div>
+                            <h1 className='text-xl font-semibold mb-2'>Looks like you have not completed your process, please continue to complete the process</h1>
+                            <p className='text-[14px] font-normal mb-10'>Please complete the process to get the loan amount, reach out to us in case you need any help</p>
+                            <button className="relative inline-block px-8 py-1 text-white font-semibold bg-[#292928] rounded-[2px]">
+                                <span className="absolute -bottom-1 -right-1 w-full h-full border-b border-r border-[#292928] rounded-[4px] z-[1]"></span>
+                                Continue application
+                            </button>
+                        </div>
+
+                        <div className='bg-[#F9F7E8] shadow-sm mb-8 p-6 flex flex-col justify-center items-center'>
+                            <Image src="/handshake.svg" alt="" width={60} height={60} className='mb-4' />
+                            <h1 className='text-xl font-semibold mb-2'>We’re Processing your Loan request</h1>
+                            <p className='text-[14px] font-normal mb-6'>Sit back, relax and let us take care of the regulatory procedure, General wait time is around 24 hours</p>
+                            <div className="w-full max-w-[600px] bg-[#F8F7F4] px-4 lg:px-20 py-4 shadow-sm rounded-[2px] text-[20px] border border-[#BFB59A]">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h3>Amount applied</h3>
+                                    <p className="font-semibold"> {'\u20B9'}3,00,000</p>
                                 </div>
-                                <div className='flex justify-between items-center'>
-                                    <div className='flex gap-4'>
-                                        <div className='bg-[#E6F2F9] px-2 h-12 w-12 flex items-center justify-center'>
-                                            <GoDatabase size={26} />
-                                        </div>
-                                        <div className='flex flex-col'>
-                                            <h4 className='text-[#61625E]'>Loan Disbursed</h4>
-                                            <p className='font-semibold'> {'\u20B9'}3,00,000</p>
-                                        </div>
-                                    </div>
-                                    <div className='flex gap-4'>
-                                        <div className='bg-[#E6F2F9] px-2 h-12 w-12 flex items-center justify-center'>
-                                            <GoDatabase size={26} />
-                                        </div>
-                                        <div className='flex flex-col'>
-                                            <h4 className='text-[#61625E]'>Loan Tenure</h4>
-                                            <p className='font-semibold'>36 Months</p>
-                                        </div>
-                                    </div>
-                                    <div className='flex gap-4'>
-                                        <div className='bg-[#E6F2F9] px-2 h-12 w-12 flex items-center justify-center'>
-                                            <GoDatabase size={26} />
-                                        </div>
-                                        <div className='flex flex-col'>
-                                            <h4 className='text-[#61625E]'>Outstanding loan (Principal + Interest)</h4>
-                                            <p className='font-semibold'> {'\u20B9'}4,00,000</p>
-                                        </div>
-                                    </div>
+                                <div className="flex justify-between items-center">
+                                    <h3>Tenure of loan</h3>
+                                    <p className="font-semibold">6 Months</p>
                                 </div>
                             </div>
                         </div>
