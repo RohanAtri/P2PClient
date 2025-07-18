@@ -73,7 +73,7 @@ export default function RightSidebar() {
             <Link
               key={item.name}
               href={item.href}
-              className="flex items-center gap-4 text-[#0A0A0A]"
+              className={`flex items-center gap-4 text-[#0A0A0A] ${pathname === item.href ? 'font-bold' : ''}`}
             >
               <Icon size={20}/>
               {item.name}
